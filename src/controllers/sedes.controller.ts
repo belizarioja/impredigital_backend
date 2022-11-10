@@ -62,9 +62,9 @@ export async function setSede (req: Request, res: Response): Promise<Response | 
 export async function getSedeCorelativo (req: Request, res: Response): Promise<Response | void> {
     try {
         const { id } = req.params;       
-        const sql = "SELECT a.id, a.idserviciosmasivo, a.identificador, a.corelativo ";
-        const from = " FROM t_serviciosdoc a ";
-        const where = " WHERE a.idserviciosmasivo = $1";
+        const sql = "SELECT id, idserviciosmasivo, identificador, corelativo ";
+        const from = " FROM t_serviciosdoc ";
+        const where = " WHERE idserviciosmasivo = $1";
         const resp = await pool.query(sql + from + where, [id]);
         const cant = resp.rows;
         const data = {

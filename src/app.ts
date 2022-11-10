@@ -11,6 +11,7 @@ import TipoDocumentosRoutes from './routes/tipodocumentos.routes'
 import FacturacionRoutes from './routes/facturacion.routes'
 import AnulacionRoutes from './routes/anulacion.routes'
 import ReportesRoutes from './routes/reportes.routes'
+import ImagenRoutes from './routes/imagen.routes'
 
 export class App {
     app: Application;
@@ -26,8 +27,8 @@ export class App {
 
     private settings () {
         this.app.set('port', process.env.PORT || 5001);
-        this.app.set('server', process.env.SERVIDOR || '');
-        // this.app.set('server', process.env.SERVER || '/impredigital_backend');
+        // this.app.set('server', process.env.SERVIDOR || '');
+        this.app.set('server', process.env.SERVER || '/impredigital_backend');
     }
     private middlewares () {
         this.app.use(morgan('dev'));
@@ -45,6 +46,7 @@ export class App {
         this.app.use(this.app.get('server') + '/facturacion', FacturacionRoutes);
         this.app.use(this.app.get('server') + '/anulacion', AnulacionRoutes);
         this.app.use(this.app.get('server') + '/reporte', ReportesRoutes);
+        this.app.use(this.app.get('server') + '/imagen', ImagenRoutes);
 
     }
 

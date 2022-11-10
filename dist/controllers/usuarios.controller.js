@@ -25,14 +25,14 @@ function getLogin(req, res) {
         try {
             const { usuario, clave } = req.body;
             const clavehash = crypto_1.default.createHash('md5').update(clave).digest("hex");
-            const sql = "select idrol, idserviciosmasivo, nombre, razonsocial, rol ";
+            const sql = "select a.idrol, a.idserviciosmasivo, a.nombre, c.razonsocial, b.rol, c.rif ";
             const from = " from t_usuarios a ";
             let leftjoin = " left join t_roles b ON a.idrol = b.id  ";
             leftjoin += " left join t_serviciosmasivos c ON a.idserviciosmasivo = c.id  ";
             const where = " where a.usuario ='" + usuario + "' and a.clave = '" + clave + "'";
-            console.log(sql + from + leftjoin + where);
+            // console.log(sql + from + leftjoin + where);
             const resp = yield database_1.pool.query(sql + from + leftjoin + where);
-            console.log(resp);
+            // console.log(resp)
             const cant = resp.rows.length;
             if (cant > 0) {
                 const accessToken = jsonwebtoken_1.default.sign({ user: resp.rows[0] }, SECRET);

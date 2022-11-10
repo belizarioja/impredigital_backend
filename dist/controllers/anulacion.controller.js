@@ -8,25 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setAnulacion = void 0;
+const moment_1 = __importDefault(require("moment"));
 // DB
 const database_1 = require("../database");
 function setAnulacion(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { id } = req;
-            const { idtipodocumento, numerodocumento, observacion } = req.body;
-            if (idtipodocumento <= 0 || idtipodocumento >= 5) {
-                return res.status(202).json({
-                    success: false,
-                    data: null,
-                    error: {
-                        code: 1,
-                        message: 'Valor de TIPO DOCUMENTO NO VALIDO!'
-                    }
-                });
-            }
+            const { numerodocumento, observacion } = req.body;
             if (numerodocumento.length < 11) {
                 return res.status(202).json({
                     success: false,
@@ -37,10 +31,11 @@ function setAnulacion(req, res) {
                     }
                 });
             }
-            const sqlupd = " update t_registros set estatus = 2,  observacion = '" + observacion + "' ";
-            const whereupd = " where idserviciosmasivo = " + id + " AND numerodocumento = '" + numerodocumento + "' AND idtipodocumento = " + idtipodocumento;
+            const fechaanulado = (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss');
+            const sqlupd = " update t_registros set estatus = 2,  observacion = $3, fechaanulado = $4 ";
+            const whereupd = " where idserviciosmasivo = $1 AND numerodocumento = $2 ";
             // console.log(sqlupd + whereupd)
-            const respupd = yield database_1.pool.query(sqlupd + whereupd);
+            const respupd = yield database_1.pool.query(sqlupd + whereupd, [id, numerodocumento, observacion, fechaanulado]);
             if (respupd.rowCount === 1) {
                 const data = {
                     success: true,

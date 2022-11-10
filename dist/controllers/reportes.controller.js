@@ -17,7 +17,7 @@ function getFacturas(req, res) {
         try {
             const { idserviciosmasivo, idtipodocumento, numerodocumento, desde, hasta, exento, impuestog, impuestor, impuestoigtf, estatus } = req.body;
             let sql = "select a.id, a.idserviciosmasivo, c.razonsocial, c.rif, c.direccion, c.telefono, a.numerodocumento, a.cedulacliente, a.nombrecliente, a.direccioncliente, a.telefonocliente, a.idtipodocumento, b.tipodocumento, ";
-            sql += " a.trackingid, a.fecha, a.tasag, a.baseg, a.impuestog, a.tasar, a.baser, a.impuestor, a.tasaigtf, a.baseigtf, a.impuestoigtf, a.subtotal, a.total, a.exento, a.estatus, a.observacion, a.relacionado ";
+            sql += " a.trackingid, a.fecha, a.tasag, a.baseg, a.impuestog, a.tasar, a.baser, a.impuestor, a.tasaigtf, a.baseigtf, a.impuestoigtf, a.subtotal, a.total, a.exento, a.estatus, a.observacion, a.relacionado, a.fechaanulado ";
             const from = " from t_registros a, t_tipodocumentos b, t_serviciosmasivos c ";
             let where = " where a.idtipodocumento = b.id and a.idserviciosmasivo = c.id and a.estatus = " + estatus;
             if (idserviciosmasivo) {
@@ -44,7 +44,7 @@ function getFacturas(req, res) {
             if (impuestoigtf) {
                 where += " and a.impuestoigtf > 0 ";
             }
-            const orderBy = ' order by a.fecha desc ';
+            const orderBy = ' order by a.fecha desc, a.numerodocumento desc ';
             const resp = yield database_1.pool.query(sql + from + where + orderBy);
             const data = {
                 succes: true,

@@ -94,33 +94,39 @@ function setFacturacion(req, res) {
                     }
                 });
             }
-            const sql = "select a.identificador, a.corelativo ";
-            const from = " from t_serviciosdoc a ";
-            const where = " where a.idserviciosmasivo = $1 ";
-            const resp = yield database_1.pool.query(sql + from + where, [id]);
+            /* const sql = "select f_registros($1) ";
+            const resp = await pool.query(sql, [id]);
+            console.log(resp) */
+            const sql = " UPDATE t_serviciosdoc ";
+            let set = " SET identificador = CASE WHEN corelativo = 99999999 THEN identificador + 1 ELSE identificador END, ";
+            set += " corelativo = CASE WHEN corelativo = 99999999 THEN 1 ELSE corelativo + 1 END ";
+            const where = " where idserviciosmasivo = $1 RETURNING idserviciosmasivo, identificador, corelativo ";
+            // console.log(sql + set + where);
+            const resp = yield database_1.pool.query(sql + set + where, [id]);
+            // console.log(resp);
+            // console.log(resp.rows[0].idserviciosmasivo);
             // console.log(resp.rows[0].identificador);
             // console.log(resp.rows[0].corelativo);
             let identificador = Number(resp.rows[0].identificador);
             let corelativo = Number(resp.rows[0].corelativo);
-            if (corelativo === 99999999) {
-                corelativo = 1;
-                identificador = Number(identificador) + 1;
+            /*if(corelativo === 99999999) {
+                corelativo = 1
+                identificador = Number(identificador) + 1
+            } else {
+                corelativo = Number(corelativo) + 1
             }
-            else {
-                corelativo = Number(corelativo) + 1;
-            }
+    
             // console.log(identificador)
             // console.log(corelativo)
             // console.log(trackingid)
+            
             const sqlupd = "update t_serviciosdoc set identificador = " + identificador + ", corelativo = " + corelativo;
             const whereupd = " where idserviciosmasivo = " + id;
-            // console.log(sqlupd + whereupd)
-            yield database_1.pool.query(sqlupd + whereupd);
+    
+            await pool.query(sqlupd + whereupd) */
             const numerocompleto = identificador.toString().padStart(2, '0') + '-' + corelativo.toString().padStart(8, '0');
             const relacionadoBD = relacionado || '';
-            // const insert = 'INSERT INTO t_registros( numeroducumento, idtipodocumento, idserviciosmasivo, trackingid, cedulacliente, nombrecliente, direccioncliente, telefonocliente, emailcliente, subtotal, total, tasag, baseg, impuestog, tasar, baser, impuestor, tasaa, basea, mpuestoa, tasaigtf, baseigtf, impuestoigtf, fecha) '
-            const insert = 'INSERT INTO t_registros (numerodocumento, idtipodocumento, idserviciosmasivo, trackingid, cedulacliente, nombrecliente, subtotal, total, tasag, baseg, impuestog, tasaigtf, baseigtf, impuestoigtf, fecha, exento, tasar, baser, impuestor, estatus, relacionado) ';
-            // const values = ' VALUES ($1, $2, $3, $4, %6, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24);'
+            const insert = 'INSERT INTO t_registros (numerodocumento, idtipodocumento, idserviciosmasivo, trackingid, cedulacliente, nombrecliente, subtotal, total, tasag, baseg, impuestog, tasaigtf, baseigtf, impuestoigtf, fecha, exento, tasar, baser, impuestor, estatus, relacionado ) ';
             const values = ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, 1, $20)';
             yield database_1.pool.query(insert + values, [numerocompleto, idtipodocumento, id, trackingid, rifcedulacliente, nombrecliente, subtotal, total, tasag, baseg, impuestog, tasaigtf, baseigtf, impuestoigtf, (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss'), exento, tasar, baser, impuestor, relacionadoBD]);
             const data = {

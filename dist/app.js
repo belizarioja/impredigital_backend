@@ -25,6 +25,7 @@ const tipodocumentos_routes_1 = __importDefault(require("./routes/tipodocumentos
 const facturacion_routes_1 = __importDefault(require("./routes/facturacion.routes"));
 const anulacion_routes_1 = __importDefault(require("./routes/anulacion.routes"));
 const reportes_routes_1 = __importDefault(require("./routes/reportes.routes"));
+const imagen_routes_1 = __importDefault(require("./routes/imagen.routes"));
 class App {
     constructor(
     // aqui variables y constantes
@@ -36,8 +37,8 @@ class App {
     }
     settings() {
         this.app.set('port', process.env.PORT || 5001);
-        this.app.set('server', process.env.SERVIDOR || '');
-        // this.app.set('server', process.env.SERVER || '/impredigital_backend');
+        // this.app.set('server', process.env.SERVIDOR || '');
+        this.app.set('server', process.env.SERVER || '/impredigital_backend');
     }
     middlewares() {
         this.app.use((0, morgan_1.default)('dev'));
@@ -54,6 +55,7 @@ class App {
         this.app.use(this.app.get('server') + '/facturacion', facturacion_routes_1.default);
         this.app.use(this.app.get('server') + '/anulacion', anulacion_routes_1.default);
         this.app.use(this.app.get('server') + '/reporte', reportes_routes_1.default);
+        this.app.use(this.app.get('server') + '/imagen', imagen_routes_1.default);
     }
     listen() {
         return __awaiter(this, void 0, void 0, function* () {

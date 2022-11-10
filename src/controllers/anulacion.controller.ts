@@ -7,17 +7,7 @@ import { pool } from '../database'
 export async function setAnulacion (req: Request, res: Response): Promise<Response | void> {
     try {
         const { id } = req;
-        const { idtipodocumento, numerodocumento, observacion } = req.body;
-        if( idtipodocumento <= 0 || idtipodocumento >= 5) {
-            return res.status(202).json({
-                success: false,
-                data: null,
-                error: {
-                    code: 1,
-                    message: 'Valor de TIPO DOCUMENTO NO VALIDO!'
-                }
-            });
-        }
+        const { numerodocumento, observacion } = req.body;
 
         if(numerodocumento.length < 11) {
             return res.status(202).json({
@@ -29,12 +19,13 @@ export async function setAnulacion (req: Request, res: Response): Promise<Respon
                 }
             });
         }
-        
-        const sqlupd = " update t_registros set estatus = 2,  observacion = '" + observacion + "' ";
-        const whereupd = " where idserviciosmasivo = " + id + " AND numerodocumento = '" + numerodocumento + "' AND idtipodocumento = " + idtipodocumento;
+        const fechaanulado = moment().format('YYYY-MM-DD HH:mm:ss')
+
+        const sqlupd = " update t_registros set estatus = 2,  observacion = $3, fechaanulado = $4 ";
+        const whereupd = " where idserviciosmasivo = $1 AND numerodocumento = $2 ";
         // console.log(sqlupd + whereupd)
 
-        const respupd = await pool.query(sqlupd + whereupd)
+        const respupd = await pool.query(sqlupd + whereupd, [id, numerodocumento, observacion, fechaanulado])
         
         if(respupd.rowCount === 1) {
             const data = {
