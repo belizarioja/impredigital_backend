@@ -26,6 +26,7 @@ const facturacion_routes_1 = __importDefault(require("./routes/facturacion.route
 const anulacion_routes_1 = __importDefault(require("./routes/anulacion.routes"));
 const reportes_routes_1 = __importDefault(require("./routes/reportes.routes"));
 const imagen_routes_1 = __importDefault(require("./routes/imagen.routes"));
+const bitacoras_routes_1 = __importDefault(require("./routes/bitacoras.routes"));
 class App {
     constructor(
     // aqui variables y constantes
@@ -56,6 +57,7 @@ class App {
         this.app.use(this.app.get('server') + '/anulacion', anulacion_routes_1.default);
         this.app.use(this.app.get('server') + '/reporte', reportes_routes_1.default);
         this.app.use(this.app.get('server') + '/imagen', imagen_routes_1.default);
+        this.app.use(this.app.get('server') + '/bitacora', bitacoras_routes_1.default);
     }
     listen() {
         return __awaiter(this, void 0, void 0, function* () {

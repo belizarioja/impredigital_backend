@@ -4,7 +4,7 @@ import { pool } from '../database'
 
 export async function getFacturas (req: Request, res: Response): Promise<Response | void> {
     try {
-        const { idserviciosmasivo, idtipodocumento, numerodocumento, desde, hasta, exento, impuestog, impuestor, impuestoigtf, estatus } = req.body;
+        const { idserviciosmasivo, idtipodocumento, numerodocumento, desde, hasta, exento, impuestog, impuestor, impuestoigtf, estatus, cedulacliente } = req.body;
 
         let sql = "select a.id, a.idserviciosmasivo, c.razonsocial, c.rif, c.direccion, c.telefono, a.numerodocumento, a.cedulacliente, a.nombrecliente, a.direccioncliente, a.telefonocliente, a.idtipodocumento, b.tipodocumento, ";
         sql += " a.trackingid, a.fecha, a.tasag, a.baseg, a.impuestog, a.tasar, a.baser, a.impuestor, a.tasaigtf, a.baseigtf, a.impuestoigtf, a.subtotal, a.total, a.exento, a.estatus, a.observacion, a.relacionado, a.fechaanulado ";
@@ -18,6 +18,9 @@ export async function getFacturas (req: Request, res: Response): Promise<Respons
         }
         if(numerodocumento) {
             where += " and a.numerodocumento = '" + numerodocumento + "'";
+        }
+        if(cedulacliente) {
+            where += " and a.cedulacliente = '" + cedulacliente + "'";
         }
         if(desde && hasta) {
             where += " and a.fecha BETWEEN '" + desde + "'::timestamp AND '" + hasta + " 23:59:59'::timestamp ";

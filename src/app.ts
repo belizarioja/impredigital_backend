@@ -12,6 +12,7 @@ import FacturacionRoutes from './routes/facturacion.routes'
 import AnulacionRoutes from './routes/anulacion.routes'
 import ReportesRoutes from './routes/reportes.routes'
 import ImagenRoutes from './routes/imagen.routes'
+import BitacorasRoutes from './routes/bitacoras.routes'
 
 export class App {
     app: Application;
@@ -47,6 +48,7 @@ export class App {
         this.app.use(this.app.get('server') + '/anulacion', AnulacionRoutes);
         this.app.use(this.app.get('server') + '/reporte', ReportesRoutes);
         this.app.use(this.app.get('server') + '/imagen', ImagenRoutes);
+        this.app.use(this.app.get('server') + '/bitacora', BitacorasRoutes);
 
     }
 

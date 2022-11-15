@@ -14,7 +14,7 @@ export async function getLogin (req: Request, res: Response): Promise<Response |
     try {
         const { usuario, clave } = req.body;
         const clavehash = crypto.createHash('md5').update(clave).digest("hex");
-        const sql = "select a.idrol, a.idserviciosmasivo, a.nombre, c.razonsocial, b.rol, c.rif ";
+        const sql = "select a.id, a.idrol, a.idserviciosmasivo, a.nombre, c.razonsocial, b.rol, c.rif ";
         const from = " from t_usuarios a ";
         let leftjoin = " left join t_roles b ON a.idrol = b.id  ";
         leftjoin += " left join t_serviciosmasivos c ON a.idserviciosmasivo = c.id  ";
@@ -44,7 +44,7 @@ export async function getLogin (req: Request, res: Response): Promise<Response |
 }
 export async function getUsuarios (req: Request, res: Response): Promise<Response | void> {
     try {
-        const sql = "select a.idrol, a.usuario, a.clave, a.idserviciosmasivo, a.nombre, c.razonsocial, b.rol, a.estatus ";
+        const sql = "select a.id, a.idrol, a.usuario, a.clave, a.idserviciosmasivo, a.nombre, c.razonsocial, b.rol, a.estatus ";
         const from = " from t_usuarios a ";
         let leftjoin = " left join t_roles b ON a.idrol = b.id  ";
         leftjoin += " left join t_serviciosmasivos c ON a.idserviciosmasivo = c.id  ";
