@@ -6,9 +6,9 @@ export async function getBitacora (req: Request, res: Response): Promise<Respons
     try {
         const { idusuario } = req.body;
 
-        const sql = "select a.idusuario, a.accion, b.usuario, b.nombre, a.ip, a.fecha, a.observacion ";
-        const from = " from t_bitacoras a, t_usuarios b ";
-        let where = " where a.idusuario = b.id ";
+        const sql = "select a.idusuario, a.idevento, c.evento, b.usuario, b.nombre, a.ip, a.fecha, a.observacion ";
+        const from = " from t_bitacoras a, t_usuarios b, t_eventos c ";
+        let where = " where a.idusuario = b.id AND a.idevento = c.id ";
         if(idusuario) {
             where += "  AND a.idusuario = " + idusuario;
         }
@@ -26,10 +26,10 @@ export async function getBitacora (req: Request, res: Response): Promise<Respons
 }
 export async function setBitacora (req: Request, res: Response): Promise<Response | void> {
     try {
-        const { idusuario, accion, ip, observacion, fecha } = req.body;
-       const insert = "insert into t_bitacoras (idusuario, accion, fecha, ip, observacion) ";
+        const { idusuario, idevento, ip, observacion, fecha } = req.body;
+       const insert = "insert into t_bitacoras (idusuario, idevento, fecha, ip, observacion) ";
         const values = " values ($1, $2, $3, $4, $5)";
-        await pool.query(insert + values, [idusuario, accion, fecha, ip, observacion]);        
+        await pool.query(insert + values, [idusuario, idevento, fecha, ip, observacion]);        
         const data = {
             success: true,
             resp: {
