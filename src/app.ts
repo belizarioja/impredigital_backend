@@ -28,8 +28,8 @@ export class App {
 
     private settings () {
         this.app.set('port', process.env.PORT || 5001);
-        // this.app.set('server', process.env.SERVIDOR || '');
-        this.app.set('server', process.env.SERVER || '/impredigital_backend');
+        this.app.set('server', process.env.SERVIDOR || '');
+        // this.app.set('server', process.env.SERVER || '/impredigital_backend');
     }
     private middlewares () {
         this.app.use(morgan('dev'));

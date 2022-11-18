@@ -9,18 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setBitacora = exports.getBitacora = void 0;
+exports.getEventos = exports.setBitacora = exports.getBitacora = void 0;
 // DB
 const database_1 = require("../database");
 function getBitacora(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { idusuario } = req.body;
+            const { idusuario, idevento, desde, hasta } = req.body;
             const sql = "select a.idusuario, a.idevento, c.evento, b.usuario, b.nombre, a.ip, a.fecha, a.observacion ";
             const from = " from t_bitacoras a, t_usuarios b, t_eventos c ";
             let where = " where a.idusuario = b.id AND a.idevento = c.id ";
             if (idusuario) {
-                where += "  AND a.idusuario = " + idusuario;
+                where += " AND a.idusuario = " + idusuario;
+            }
+            if (idevento) {
+                where += " AND a.idevento = " + idevento;
+            }
+            if (desde && hasta) {
+                where += " AND a.fecha BETWEEN '" + desde + "'::timestamp AND '" + hasta + " 23:59:59'::timestamp ";
             }
             const resp = yield database_1.pool.query(sql + from + where);
             const cant = resp.rows.length;
@@ -57,3 +63,21 @@ function setBitacora(req, res) {
     });
 }
 exports.setBitacora = setBitacora;
+function getEventos(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const sql = "select * from t_eventos ";
+            const resp = yield database_1.pool.query(sql);
+            const cant = resp.rows.length;
+            const data = {
+                success: true,
+                data: resp.rows
+            };
+            return res.status(200).json(data);
+        }
+        catch (e) {
+            return res.status(400).send('Error Listando Eventos de Bitáqcora ' + e);
+        }
+    });
+}
+exports.getEventos = getEventos;
